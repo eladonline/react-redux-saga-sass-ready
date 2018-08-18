@@ -2,6 +2,6 @@
 
 a desktop in the browser.
 
-the idea is to have a network drived work enviroment, that is global and the same
+the idea is to have a network drived work enviroment, 
 
-for everyone in the organization.
+that is global and the same for everyone in the organization.
