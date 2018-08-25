@@ -1,383 +1,75 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import Navbar from 'src/components/fixed/navbar/';
-import { Parallax, ParallaxLayer } from 'react-spring';
-import resetAnimation from 'src/components/helpers/resetAnimation';
-import Bullets from 'src/components/bullets/Bullets';
-import FirstSection from 'src/components/sections/first/First';
-import SecondSection from 'src/components/sections/second/Second';
-import ThirdSection from 'src/components/sections/third/Third';
-import { SideImgThird } from 'src/components/sections/third/SideImg';
-import { SideImgForth } from 'src/components/sections/forth/SideImg';
-import ForthSection from 'src/components/sections/forth/Forth';
-import FifthSection from 'src/components/sections/fifth/Fifth';
-import SixthSection from 'src/components/sections/sixth/Sixth';
-import SeventhSection from 'src/components/sections/seventh/Seventh';
-import JoinUs from 'src/components/sections/joinUs/JoinUs';
-import JoinUsBackground from 'src/components/sections/joinUs/joinUsBackground';
-import JuLayer from 'src/components/sections/joinUs/JuLayer';
-import Promo from 'src/components/sections/first/Promo';
-import Observer from 'react-intersection-observer';
-import { isMobile } from 'react-device-detect';
-import handleScrollTransition from './scrollTransition';
+import React from 'react';
+import FrameSkel from 'src/components/frame/frameSkel';
+import falseData from 'src/components/helpers/falseData';
+import Sortable from 'sortablejs';
 
-/**
- * @summary good to know
- * when document says "full page"
- * it means every page that linked to a bullet
- * means every page thats in the limit of the auto scroll
- */
+import { Row, Col } from 'react-bootstrap';
 
-export default class Homepage extends Component {
+export default class Desktop extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      offset: 0,
-      canScroll: true,
-      browserWidth: window.screen.width
-    };
-    this.lastPage = 0.7;
-    this.overallPages = 7 + this.lastPage;
-    this.lastScrollPos = 0;
-    this.scrollLockTime = 1100; // 1s
-    this.scrollUnlock = this.scrollUnlock.bind(this);
-    this.scrollLock = this.scrollLock.bind(this);
-    this.handleBulletClick = this.handleBulletClick.bind(this);
-    this.handleBulletLabelFocus = this.handleBulletLabelFocus.bind(this);
-    this.handleScrollAnimation = this.handleScrollAnimation.bind(this);
+    this.state = { selected: null, wideItem: false };
+    this.toggleWideItem = this.toggleWideItem.bind(this);
   }
-
   componentDidMount() {
-    if (window) {
-      const overallPages = this.overallPages - this.lastPage;
-      const LastFullPage = overallPages - 1;
-      // eslint-disable-line
-      const paralax = ReactDOM.findDOMNode(this.parallax); // eslint-disable-line
-      this.parallaxNode = paralax;
-      this.setState({ parallax: paralax });
-      if (!isMobile) {
-        /**
-         * @event addEventListener
-         * @listens wheel
-         * @callback ()=>
-         * @param {object} e
-         * @summary detect scrolling direction of the wheel and auto scroll this direction
-         */
-        paralax.addEventListener('wheel', e => {
-          const scrollDirection = e.deltaY > 0; // true down false up
-          let endRound = false;
-          // scroll down and its in the limit of full pages
-          if (
-            !endRound &&
-            scrollDirection &&
-            this.state.canScroll &&
-            this.state.offset < LastFullPage
-          ) {
-            let offset = Math.min(this.state.offset + 1, LastFullPage);
-
-            /*
-              this section handles the layer under layer scrolling
-              example: at third section, the image comes under the exiting section
-              you can see that on scroll the exiting layer is over the incoming inmage
-            */
-            ////////////////////////
-
-            handleScrollTransition(paralax, offset);
-
-            ////////////////////////////
-            resetAnimation(offset, paralax);
-            this.handleBulletLabelFocus(offset);
-            this.parallax.scrollTo(offset);
-            if (offset === LastFullPage) {
-              setTimeout(() => {
-                paralax.style.overflowY = 'scroll';
-              }, 950);
-              this.BulletsANavbarDipslay('none');
-            }
-            this.setState({ offset });
-            this.scrollLock();
-            this.scrollUnlock();
-            endRound = true;
-            // scroll up and its in the limit of full pages
-          } else if (
-            !endRound &&
-            !scrollDirection &&
-            this.state.canScroll &&
-            this.state.offset !== this.overallPages
-          ) {
-            const offset = Math.max(this.state.offset - 1, 0);
-            resetAnimation(offset, paralax);
-            ///////////////
-
-            handleScrollTransition(paralax, offset, 'up');
-
-            ///////////////////////////////////////
-            offset < overallPages && this.parallax.scrollTo(offset);
-            this.state.offset > overallPages - 2 && this.BulletsANavbarDipslay('flex');
-            // solve problem of executing bullet click(), before the bullet changes style from none to flex
-            // and being aborted
-            this.state.offset === LastFullPage
-              ? setTimeout(() => {
-                this.handleBulletLabelFocus(overallPages - 2);
-              }, 30)
-              : this.handleBulletLabelFocus(offset);
-            if (paralax.style.overflow !== 'hidden') paralax.style.overflow = 'hidden';
-            if (this.state.offset === overallPages || offset === overallPages) {
-              this.BulletsANavbarDipslay('none');
-            }
-            this.parallax.scrollTo(offset);
-            this.setState({ offset });
-            this.scrollLock();
-            this.scrollUnlock();
-            endRound = true;
-            // if view last full page and scroll down
-          } else if (!endRound && this.state.offset === LastFullPage && scrollDirection) {
-            this.BulletsANavbarDipslay('none');
-            this.setState({ offset: this.overallPages });
-            setTimeout(() => {
-              paralax.style.overflowY = 'scroll';
-            }, 450);
-            endRound = true;
-            // if view last page and scroll up
-          } else if (!endRound && this.state.offset === this.overallPages && !scrollDirection) {
-            if (this.state.offset === overallPages) {
-              this.BulletsANavbarDipslay('none');
-            }
-            paralax.style.overflowY = 'hidden';
-            this.parallax.scrollTo(LastFullPage);
-            this.setState({ offset: LastFullPage });
-            this.scrollLock();
-            this.scrollUnlock(650);
-
-            endRound = true;
-          }
-        });
-      }
-    }
-    if (window && !this.browserSize) {
-      window.addEventListener('resize', e => {
-        this.setState({ browserWidth: e.target.window.innerWidth });
-      });
+    const [leftCol, rightCol] = document.querySelectorAll('#sortableGroup');
+    if (leftCol && rightCol) {
+      const props = {
+        group: 'screen',
+        sort: true,
+        delay: 0,
+        touchStartThreshold: 5,
+        animation: 150,
+        handle: '.dragMe',
+        scroll: true,
+        scrollSensitivity: 30
+      };
+      const sortableLeft = new Sortable(leftCol, props);
+      const sortableRight = new Sortable(rightCol, props);
+      Object.assign(props, sortableLeft);
+      Object.assign(props, sortableRight);
     }
   }
-
-  /**
-   * @function scrollLock
-   * @summary disable scrolling by setting state to false
-   */
-  scrollLock() {
-    this.setState({ canScroll: false });
+  toggleWideItem() {
+    this.setState({ wideItem: !this.state.wideItem });
+    return this.state.wideItem
   }
-  /**
-   * @function scrollUnlock
-   * @param {number} time -- optional
-   * @summary setTimeout to enable scroll
-   */
-  scrollUnlock(time = 0) {
-    setTimeout(() => {
-      this.setState({ canScroll: true });
-    }, time || this.scrollLockTime);
-  }
-  /**
-   * @function handleScrollAnimation
-   * @param {number} offset -the page the browser display in this moment
-   * @summary start animation on the page that is in view
-   */
-  handleScrollAnimation(offset) {
-    offset = Math.max(offset, 1) - 1;
-    resetAnimation(offset, this.parallaxNode);
-  }
-  /**
-   * @function BulletsANavbarDipslay
-   * @param {string} display - flex/none
-   */
-  BulletsANavbarDipslay(display) {
-    const bullets = document.querySelector('.bulletsMain');
-    const navbar = document.querySelector('#mainNavbar');
-
-    bullets.style.display = display;
-    navbar.style.display = display;
-  }
-  /**
-   * @function handleBulletClick
-   * @param {number} offset -the page the browser display in this moment
-   * @summary handle the scroll, animation, bullets display, offset state
-   */
-  handleBulletClick(offset) {
-    // if page *in view, big or equeal to the page *to view
-    if (this.state.offset >= offset && offset >= this.overallPages - this.lastPage - 1) return '';
-    const overallPages = this.overallPages - this.lastPage - 1;
-    // hide scroll if page to view < last full page to view
-    if (offset < overallPages) {
-      this.parallaxNode.style.overflow = 'hidden';
+  splitArrToTwoCols() {
+    const list = [];
+    for (let i = 0; i < falseData.head.length; i++) {
+      list.push(
+        <FrameSkel
+          toggleWideItem={this.toggleWideItem}
+          key={i}
+          head={falseData.head[i]}
+          source={falseData.source[i]}
+        />
+      );
     }
-    // bullet pressed
-    if (offset <= overallPages) {
-      // if static bullets are hidden -- because its the last full size page (SeventhSection)
-      // then show them.
-      if (offset < overallPages) {
-        this.BulletsANavbarDipslay('flex');
-        // if the last bullet pressed, hide the bullets
-      } else if (offset + 1 === this.overallPages - this.lastPage) {
-        this.BulletsANavbarDipslay('none');
-      }
-      this.scrollLock();
-      this.setState({ offset });
-      resetAnimation(offset, this.parallaxNode);
-      this.parallax.scrollTo(offset);
-
-      this.scrollUnlock();
+    let pairs = [];
+    let key = 0;
+    const maxValue = Math.ceil(list.length / 2);
+    while (list.length) {
+      key++;
+      pairs.push(
+        <Col
+          id="sortableGroup"
+          key={`frameSkelCol-${key}`}
+          xs={12}
+          md={this.state.wideItem ? 12 : 6}
+        >
+          {list.splice(0, maxValue)}
+        </Col>
+      );
     }
-    // activate scroll if its last full size page
-    if (offset === overallPages) {
-      setTimeout(() => {
-        if (this.parallaxNode.style.overflowY !== 'scroll') {
-          this.parallaxNode.style.overflowY = 'scroll';
-        }
-      }, 980);
-    }
-  }
-  /**
-   * @function handleBulletLabelFocus
-   * @param {number} offset -the page the browser display in this moment
-   * @summary display the label of the page (linked to the bullet)
-   * @fires click - display the label
-   * @fires setTimeout -hide the label
-   */
-  handleBulletLabelFocus(offset) {
-    const target = document.querySelector(`#bullet_${offset}`);
 
-    if (target !== null) {
-      target.click();
-
-      setTimeout(() => {
-        target.click();
-      }, 950);
-    }
-  }
-  /**
-   *
-   * @param {component} children
-   * @param {number} offset
-   * @param {float, number} speed
-   * @param {number} zIndex
-   * @returns [{component}] [component wrapped by parallax layer]
-   */
-  page(component, offset, id, speed = 0, zIndex = 1, oStyle) {
-    return (
-      <ParallaxLayer offset={offset} id={id} speed={speed} style={{ zIndex: zIndex, ...oStyle }}>
-        {/*Observer is for tracking if component is in view (mobile mode) */}
-        <Observer className="observer-con">
-          {({ inView, ref }) => {
-            if (inView) this.handleScrollAnimation(offset);
-            return (
-              <div className="observer-con-child" ref={ref}>
-                {component}
-              </div>
-            );
-          }}
-        </Observer>
-      </ParallaxLayer>
-    );
+    return pairs;
   }
   render() {
-    const mobile = isMobile;
     return (
-      <React.Fragment>
-        <Navbar offset={this.state.offset} />
-        {!mobile && (
-          <Bullets
-            id="mainBullets"
-            pages={this.overallPages - this.lastPage}
-            handleBulletClick={this.handleBulletClick}
-            offset={this.state.offset}
-          />
-        )}
-
-        <Parallax
-          className="container-parallax"
-          ref={ref => (this.parallax = ref)}
-          pages={this.overallPages}
-          scrolling={mobile}
-          config={{
-            tension: 3,
-            friction: 6,
-            velocity: 0,
-            overshootClamping: false,
-            restSpeedThreshold: 0.9,
-            restDisplacementThreshold: 0.9
-          }}
-        >
-          <React.Fragment>
-            {/*first section*/}
-            {this.page(<Promo />, 0, 'firstSection-a-homepage', 0, 10)}
-            {this.page(<FirstSection />, 0, 'firstSection-b-homepage', 0, 10)}
-            {/*first section end*/}
-
-            {/*second section*/}
-            {this.page(
-              <SecondSection
-                parallax={this.state.parallax}
-                browserWidth={this.state.browserWidth}
-              />,
-              1,
-              'secondSection-homepage',
-              0,
-              11
-            )}
-            {/*second section end*/}
-
-            {/* third section */}
-            {this.page(<ThirdSection />, 2, 'thirdSection-a-homepage', 0, 8)}
-            {this.page(<SideImgThird />, 2, 'thirdSection-b-homepage', 0, 7)}
-            {/* third section end */}
-
-            {/* forth section */}
-            {this.page(<ForthSection />, 3, 'forthSection-a-homepage', 0, 6)}
-            {this.page(<SideImgForth />, 3, 'forthSection-b-homepage', 0, 7, {
-              width: '50%',
-              left: '50%'
-            })}
-            {/* forth section end */}
-
-            {/* fifth section  */}
-            {this.page(<FifthSection />, 4)}
-            {/* fifth section end */}
-
-            {/* sixth section  */}
-            {this.page(<SixthSection />, 5)}
-            {/* sixth section end */}
-
-            {/*seventh section*/}
-            {this.page(<Navbar offset={this.state.offset} />, 6, 'seventhNavbar-homepage', 0, 7, {
-              height: '70px'
-            })}
-
-            {!mobile &&
-              this.page(
-                <Bullets
-                  id="customBullets"
-                  pages={this.overallPages - this.lastPage}
-                  handleBulletClick={this.handleBulletClick}
-                  offset={this.state.offset}
-                />,
-                6,
-                'seventhBullets-homepage',
-                0,
-                6,
-                { width: '10px', right: '0' }
-              )}
-            {this.page(<SeventhSection />, 6, 'seventh-homepage', 0)}
-            {/*seventh section end*/}
-
-            {/* join us page*/}
-            {this.page(<JoinUs />, 7, 'JoinUs-homepage', 0, 2)}
-            {this.page(<JuLayer />, 7, 'JoinUs-homepage')}
-            {this.page(<JoinUsBackground />, 7, 'JoinUs-homepage', 0.3)}
-            {/*end*/}
-          </React.Fragment>
-        </Parallax>
-      </React.Fragment>
+      <div id="main-con-homepage">
+        <Row className="hompageRow">{this.splitArrToTwoCols()}</Row>
+      </div>
     );
   }
 }

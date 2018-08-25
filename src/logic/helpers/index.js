@@ -1,21 +1,15 @@
 import validate, { isEmpty, getDeepObjectValue } from 'validate.js';
-import {appConfig} from 'src/logic'
+import { appConfig } from 'src/logic';
 export const objDig = getDeepObjectValue;
 
-export const toPascalCase = function (str) {
+export const toPascalCase = function(str) {
   // convert 'my worD' to 'My Word'
-  return str.replace(
-    /\w\S*/g,
-    txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
-  );
+  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 };
 
-export const toTitleCase = function (str) {
+export const toTitleCase = function(str) {
   // convert 'my worD' to 'My WorD'
-  return str.replace(
-    /\w\S*/g,
-    txt => txt.charAt(0).toUpperCase() + txt.substr(1),
-  );
+  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1));
 };
 
 /**
@@ -23,7 +17,7 @@ export const toTitleCase = function (str) {
  * @param {*} type oneOf(['lowerCase', 'upperCase', 'pascalCase', 'TitleCase'])
  * @param {*} text string
  */
-export const convertCase = function (type, text) {
+export const convertCase = function(type, text) {
   if (!text || !type) return text;
   let convertText = '';
   switch (type) {
@@ -52,9 +46,8 @@ export const convertCase = function (type, text) {
  * @return return the target or null
  */
 /* eslint no-restricted-syntax: "off" */
-export const dig = function (obj, target) {
-  console.warn(
-    'please stop using dig and use helpers.objDig(myobj, "mykey.nextKet.3.age")')
+export const dig = function(obj, target) {
+  console.warn('please stop using dig and use helpers.objDig(myobj, "mykey.nextKet.3.age")');
   const keys = target.split('.');
   let digged = obj;
   for (const key of keys) {
@@ -79,36 +72,70 @@ export const dig = function (obj, target) {
  * @param {string} str - the string to test
  * @returns {bool} true if the string is undefined or null or empty
  */
-export const isEmptyString = function (str) {
+export const isEmptyString = function(str) {
   return str === undefined || str === null || str.trim().length === 0;
 };
 
 /**
  * isEmptyValue- return true if it ""/[]/{}/null/undefined
  */
-export const isEmptyValue = function (val) {
-  return isEmpty(val)
+export const isEmptyValue = function(val) {
+  return isEmpty(val);
 };
 /**
  * createUserPointer- return pointer to Parse _User
  */
-export const createUserPointer = function (userId) {
+export const createUserPointer = function(userId) {
   return {
     className: '_User',
     objectId: userId,
-    __type: 'Pointer',
+    __type: 'Pointer'
   };
 };
 
-export const getEmailErr = function (email) {
-  let message = validate.single(email, {presence: true, email: true});
-  if(message) {
-    return message
+export const getEmailErr = function(email) {
+  let message = validate.single(email, { presence: true, email: true });
+  if (message) {
+    return message;
   }
 };
-export const getPasswordErr = function (password) {
+export const getPasswordErr = function(password) {
   let message = validate.single(password, appConfig.passwordValidator);
-  if(message) {
-    return message
+  if (message) {
+    return message;
   }
+};
+
+export const fadeInOut = (el, bool) => {
+  if (bool) {
+    setTimeout(() => {
+      el.style.display = 'none';
+    }, 1000);
+    el.classList.remove('fade-in');
+    el.classList.add('fade-out');
+  } else {
+    el.style.display = 'flex';
+    el.classList.remove('fade-out');
+    el.classList.add('fade-in');
+  }
+};
+export const shrinkScale = (el, bool) => {
+  if (bool) {
+    setTimeout(() => {
+      el.classList.remove('shrink-out');
+      el.classList.add('scale-in');
+    }, 1000);
+  } else {
+    el.classList.remove('scale-in');
+    el.classList.add('shrink-out');
+  }
+};
+
+export const queryAllExtract = nodeList => {
+  const arr = [];
+  for (let i = 0; i < nodeList.length; i++) {
+    arr.push(nodeList[i]);
+  }
+  console.log(arr);
+  return arr;
 };
