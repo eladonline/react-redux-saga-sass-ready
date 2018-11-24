@@ -1,30 +1,4 @@
 
-/* Raleway*/
-@font-face {
-    font-family: Raleway-Regular;
-    src: url("../fonts/fonts/raleway/Raleway-Regular.ttf");
-}
-
-@font-face {
-    font-family: Raleway-Bold;
-    src: url("../fonts/fonts/raleway/Raleway-Bold.ttf");
-}
-@font-face {
-    font-family: Raleway-ExtraBold;
-    src: url("../fonts/fonts/raleway/Raleway-ExtraBold.ttf");
-}
-@font-face {
-    font-family: Raleway-SemiBold;
-    src: url("../fonts/fonts/raleway/Raleway-SemiBold.ttf");
-}
-@font-face {
-    font-family: Raleway-Black;
-    src: url("../fonts/fonts/raleway/Raleway-Black.ttf");
-}
-@font-face {
-    font-family: Raleway-Medium;
-    src: url("../fonts/fonts/raleway/Raleway-Medium.ttf");
-}
 
 /* Lato*/
 @font-face {
@@ -35,18 +9,6 @@
 @font-face {
     font-family: Lato-Bold;
     src: url("../fonts/fonts/Lato/Lato-Bold.ttf")
-}
-@font-face {
-    font-family: Lato-Heavy;
-    src: url("../fonts/fonts/Lato/Lato-Heavy.ttf")
-}
-@font-face {
-    font-family: Lato-Black;
-    src: url("../fonts/fonts/Lato/Lato-Black.ttf")
-}
-@font-face {
-    font-family: Lato-Light;
-    src: url("../fonts/fonts/Lato/Lato-Light.ttf")
 }
 @font-face {
     font-family: Lato-Medium;

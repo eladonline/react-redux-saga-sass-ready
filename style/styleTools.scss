@@ -12,10 +12,15 @@ $mainHighlight: #0a5ff2;
 $subHighlight: #86baff;
 $alerts: #ee6f7d;
 $TraderRegistration: #13379c;
-$textBlue: #1e5bff;
+$mainBlue: #1e5bff;
 $pageLabel: #7fb4ff;
 $diagPos: #2cce9f;
 $diagNeg: #ee6f7d;
+$placeholders: #dce1e8;
+////////////
+// margins
+////////////
+
 /////////////////
 // Mixins
 /////////////////
@@ -32,176 +37,361 @@ $diagNeg: #ee6f7d;
   justify-content: $justify;
   align-items: $alignItems;
 }
-
-//////////////
+@mixin grid(
+  $gap: 10px,
+  $justify: initial,
+  $alignItems: initial,
+  $template-cols: initial,
+  $template-rows: initial,
+  $areas: initial
+) {
+  display: grid;
+  grid-gap: $gap;
+  justify-content: $justify;
+  align-items: $alignItems;
+  grid-template-columns: $template-cols;
+  grid-template-rows: $template-rows;
+  grid-template-areas: $areas;
+}
+// ////////////
 // responsive
-//////////////
+// ////////////
 // lanscape phone
 @mixin xs {
-  @media (min-width: 566px) {
+  @media screen and (min-width: 566px) {
     @content;
   }
 }
-
 // tablets
 @mixin sm {
-  @media (min-width: 768px) {
-    @media screen and (min-height: 800px) {
-      @content;
-    }
+  @media screen and (min-width: 768px) {
+    @content;
   }
 }
-// small desktops
 @mixin smd {
-  @media (min-width: 768px) {
-    @media screen and (max-height: 799px) {
-      @content;
-    }
+  @media screen and (min-width: 768px) {
+    @content;
   }
 }
-
 // small desktop laptops lanscape tablets
 @mixin md {
-  @media (min-width: 992px) {
+  @media screen and (min-width: 992px) {
     @content;
   }
 }
-
 // wide screens
 @mixin lg {
-  @media (min-width: 1200px) {
+  @media screen and (min-width: 1200px) {
     @content;
   }
 }
-
 // medium desktop laptops
 @mixin xl {
-  @media (min-width: 1600px) {
+  @media screen and (min-width: 1600px) {
     @content;
   }
 }
-
-///////////////
+// /////////////
 // common Classes
-/////////////////
-
-//////////////////
+// ///////////////
+%headers-base {
+  font-size: 22px;
+  line-height: 1.2;
+  @include xs {
+    font-size: 26px;
+  }
+  @include sm {
+    line-height: 54px;
+    font-size: 36px;
+  }
+  @include md {
+    font-size: 36px;
+  }
+  @include xl {
+    font-size: 42px;
+  }
+}
+%subHeader-base {
+  margin-bottom: 0.8em !important;
+  font-size: 14px;
+  line-height: 16px;
+  @include xs {
+    font-size: 12px;
+  }
+  @include sm {
+    font-size: 20px;
+  }
+  @include md {
+    font-size: 16px;
+  }
+  @include xl {
+    font-size: 16px;
+  }
+}
+// about us and seventh Slide
+%blueHeader {
+  color: $mainBlue;
+  @extend %Lato-Medium;
+  font-weight: 500;
+  font-size: 14px;
+  @include sm {
+    font-size: 20px;
+  }
+  @include md {
+    font-size: 15px;
+  }
+  @include lg {
+    line-height: 1;
+    font-size: 15px;
+  }
+  @include xl {
+    font-size: 20px;
+  }
+}
+// ////////////////
+%text-base {
+  font-size: 16px;
+  @include xs {
+    font-size: 12px;
+  }
+  @include sm {
+    font-size: 20px;
+  }
+  @include md {
+    font-size: 14px;
+  }
+  @include lg {
+    font-size: 16px;
+  }
+  @include xl {
+    font-size: 18px;
+  }
+}
+%pagePaddingTop {
+  @include sm {
+    padding: 4em 0 4em 0;
+  }
+  @include md {
+    padding: 100px 0 0 0;
+  }
+  @include xl {
+    padding: 154px 0 0 0;
+  }
+}
+// ////////////////
 // selectors
-/////////////////
+// ///////////////
 %btn-base {
-  padding-left: 26px;
-  padding-right: 26px;
-  border-radius: 23px;
   outline: none;
   font: {
-    size: 16px;
     weight: bold;
     style: normal;
     stretch: normal;
   }
   @extend %Lato-Bold;
+  line-height: 14px;
+  font-size: 15px;
+  padding-left: 2em;
+  padding-right: 2em;
+  border-radius: 35px;
+  @include sm {
+    border-radius: 23px;
+    font-size: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  @include xl {
+    font-size: 16px;
+    padding-left: 26px;
+    padding-right: 26px;
+  }
 }
 %btn-whiteInversion {
-  color: $textBlue;
+  color: $mainBlue;
   background: white;
 }
-%btnOverlay-base {
-  border-radius: 17px;
-  border: 3px solid #fff;
-  background: #333;
+%btn-blueInversion {
+  background: $mainBlue;
+  color: white;
+}
+%baseInput {
+  background: transparent;
   outline: none;
-  transition: 0.3s ease;
-  &:hover {
-    transform: scale3d(1.2, 1.2, 1.2);
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  &::placeholder {
+    @extend %Lato-Italic;
+  }
+}
+%LOGO {
+  object-fit: contain;
+  width: 50px;
+  height: 45px;
+  @include smd {
+    height: 50px;
+    width: 56px;
   }
 }
 ///////////
 // LATO
 ///////////
 %Lato {
-  font-family: Lato-regular, sans-serif;
+  // font-family: Lato-Regular, sans-serif;
+  font : {
+    family: Lato, sans-serif;
+    style: normal;
+    weight: 400;
+  }
 }
-
 %Lato-Bold {
-  font-family: Lato-Bold, sans-serif;
+  // font-family: Lato-Bold, sans-serif;
+  font : {
+    family: Lato, sans-serif;
+    style: normal;
+    weight: bold;
+  }
 }
-
 %Lato-Heavy {
   font-family: Lato-Heavy, sans-serif;
 }
-
 %Lato-Black {
-  font-family: Lato-Black, sans-serif;
+  // font-family: Lato-Black, sans-serif;
+  font : {
+    family: Lato, sans-serif;
+    style: normal;
+    weight: 900;
+  }
 }
-
 %Lato-Light {
-  font-family: Lato-Light, sans-serif;
+  // font-family: Lato-Light, sans-serif;
+  font : {
+    family: Lato, sans-serif;
+    style: normal;
+    weight: 300;
+  }
 }
-
 %Lato-Medium {
-  font-family: Lato-Medium, sans-serif;
+  // font-family: Lato-Medium, sans-serif;
+  font : {
+    family: Lato, sans-serif;
+    style: normal;
+    weight: 500;
+  }
 }
-
 %Lato-Italic {
-  font-family: Lato-Italic, sans-serif;
-} ///////////
+  // font-family: Lato-Italic, sans-serif;
+  font : {
+    family: Lato, sans-serif;
+    style: italic;
+    weight: 400;
+  }
+}
+// /////////
 // Raleway
-///////////
+// /////////
 %Raleway {
-  font-family: Raleway-Regular, sans-serif;
+  // font-family: Raleway-Regular, sans-serif;
+  font : {
+    family: Raleway, sans-serif;
+    style: normal;
+    weight: 400;
+  }
 }
-
 %Raleway-Bold {
-  font-family: Raleway-Bold, sans-serif;
+  // font-family: Raleway-Bold, sans-serif;
+  font : {
+    family: Raleway, sans-serif;
+    style: normal;
+    weight: bold;
+  }
 }
-
 %Raleway-ExtraBold {
-  font-family: Raleway-ExtraBold, sans-serif;
+  // font-family: Raleway-ExtraBold, sans-serif;
+  font : {
+    family: Raleway, sans-serif;
+    style: normal;
+    weight: 600;
+  }
 }
-
 %Raleway-SemiBold {
-  font-family: Raleway-SemiBold, sans-serif;
+  // font-family: Raleway-SemiBold, sans-serif;
+  font : {
+    family: Raleway, sans-serif;
+    style: normal;
+    weight: 600;
+  }
 }
-
 %Raleway-Black {
-  font-family: Raleway-Black, sans-serif;
+  // font-family: Raleway-Black, sans-serif;
+  font : {
+    family: Raleway, sans-serif;
+    style: normal;
+    weight: 800;
+  }
 }
-
 %Raleway-Medium {
-  font-family: Raleway-Medium, sans-serif;
+  // font-family: Raleway-Medium, sans-serif;
+  font : {
+    family: Raleway, sans-serif;
+    style: normal;
+    weight: 900;
+  }
 }
-
-//////////////////
+// ////////////////
 // common classes
-/////////////////
+// ///////////////
 .d-flex {
   display: flex;
 }
-
 .flex-wrap {
   flex-wrap: wrap;
 }
-
 .m-t-7 {
   margin-top: 7px;
 }
-
+.m-t-15 {
+  margin-top: 15px;
+}
 .modal {
   position: absolute;
   width: 100%;
   height: 100vh;
   background: rgba(255, 255, 255, 0.3);
 }
-
 .invisible {
   transition: 0.5s ease-in;
   opacity: 0; // visibility: hidden;
 }
-
-////////////////////
+.navigation {
+  text-transform: uppercase;
+  font-size: 16px;
+  line-height: 32px;
+  letter-spacing: 0.4px;
+  @extend %Lato-Black;
+  color: $pageLabel;
+  list-style: none;
+  @include flex-row();
+  padding: 0;
+  li {
+    margin-right: 16px;
+    &[data-active='true'] {
+      color: white;
+    }
+  }
+}
+// //////////////////
 // Animation
-///////////////////
-
+// /////////////////
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 @keyframes down30 {
   from {
     transform: translate3d(0, -30px, 0);
@@ -210,64 +400,11 @@ $diagNeg: #ee6f7d;
     transform: translate3d(0, 0px, 0);
   }
 }
-
 @keyframes up30 {
   from {
     transform: translate3d(0, 30px, 0);
   }
   to {
     transform: translate3d(0, 0px, 0);
-  }
-}
-$fadeTime: 0.8s;
-$scaleTime: 0.4s;
-
-.fade-out {
-  animation: fade-out $fadeTime ease forwards;
-}
-.fade-in {
-  animation: fade-in $fadeTime ease forwards;
-}
-.scale-in {
-  animation: scaleIn $scaleTime ease forwards;
-}
-.shrink-out {
-  animation: shrinkOut $scaleTime ease forwards;
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes shrinkOut {
-  from {
-    transform: scale3d(1, 1, 1);
-  }
-  to {
-    transform: scale3d(0, 0, 0);
-  }
-}
-@keyframes scaleIn {
-  0% {
-    transform: scale3d(0, 0, 0);
-  }
-  70% {
-    transform: scale3d(1.2, 1.2, 1.2);
-  }
-  100% {
-    transform: scale3d(1, 1, 1);
   }
 }

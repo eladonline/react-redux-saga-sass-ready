@@ -14,6 +14,11 @@ const { toggleAll } = appActions;
 // const { Content, Footer } = Layout;
 
 class Header extends Component {
+  componentDidMount() {
+    window.addEventListener('resize', () => {
+      this.props.toggleAll(window.screenX, window.screenY);
+    });
+  }
   render() {
     if (this.props.App.height === 0) {
       return (

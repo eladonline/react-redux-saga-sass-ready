@@ -23,7 +23,8 @@ const actions = {
       type: actions.TOGGLE_ALL,
       collapsed,
       view,
-      height
+      height,
+      width
     };
   },
   toggleOpenDrawer: () => ({
